@@ -1,0 +1,27 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<h1> Create a new project</h1>
+
+{% if  success_message %}
+    <div class="alert alert-success">
+        {{ success_message }}
+    </div>
+{% endif %}
+
+<form method="post" id="ProjectForm">
+    {% csrf_token %}
+    {{ form_project.as_p}}
+    <button type="submit"> Save </button>
+</form>
+
+<script>
+    document.getElementById('ProjectForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita que el formulario se envíe inmediatamente
+    if (confirm('Are you sure you want to save the task?')) {
+        this.submit(); // Envía el formulario si el usuario confirma
+    }
+});
+
+</script>
+{% endblock %}

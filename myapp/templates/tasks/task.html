@@ -1,0 +1,46 @@
+{% extends "layouts/base2.html" %}
+
+{% block content %}
+<div>
+    <h1>TASKS:</h1>
+</div>
+<br>
+{% if task_bool == True %}
+<h1>No existen Tasks</h1>
+<a href="/create_task"><button>➥ Create a new Task</button></a>
+{% else %}
+{% for task in tasks %}
+<div>
+    <h1>{% if task.done == True %}✅ {% else %}📆 {% endif %} {{task.title}} </h1>
+    <p>{{task.description}}</p>
+    <p> Proyecto: {{task.project}}</p>
+    <p> id: {{task.id}}</p>
+    <form method="post" class="DeletetaskForm" action="{% url 'delete_task' task.id %}">
+        {% csrf_token %}
+        <button type="submit">Delete Task</button>
+
+    </form>
+
+    <form method="post" action="{% url 'toggle_task_done' task.id %}">
+        {% csrf_token %}
+        <input type="checkbox" id="completed" name="completed" {% if task.done %}checked{% endif %}>
+        <label for="completed">Marcar como completada</label>
+            <br>
+        <button type="submit"> {% if task.done == True %} Done ✔️ {% else %}To Do 🕛 {% endif %} </button>
+    </form>
+    <br>
+    <br>
+</div>
+{% endfor %}
+{% endif %}
+<script>
+document.querySelectorAll('.DeletetaskForm').forEach(function(form) {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Evita que el formulario se envíe inmediatamente
+        if (confirm('Are you sure you want to delete this project?')) {
+            this.submit(); // Envía el formulario si el usuario confirma
+        }
+    });
+});
+</script>
+{% endblock %}
